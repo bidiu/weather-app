@@ -71,7 +71,7 @@ export const WeatherPage = React.createClass({
       $.ajax({
         url: `${CUR_WEATHER_ENDPOINT}?lat=${coord.latitude}&lon=${coord.longitude}&APPID=${API_KEY}`,
         success: (data, textStatus) => {
-          data.__key = data.coord ? (data.coord.lat + " " + data.coord.lon) : data.name;
+          data.__key = data.coord ? (data.coord.lat + "," + data.coord.lon) : data.name;
           data.__geo = true;
           const weatherDataList = this.addToDataList(data);
           this.setState({

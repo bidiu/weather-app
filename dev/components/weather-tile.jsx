@@ -10,8 +10,7 @@ export const TilesContainer = React.createClass({
       padding: "30px"
     };
     const tiles = this.props.weatherDataList.map((weatherData, i) =>
-      <WeatherTile weatherData={weatherData}
-        key={weatherData.__key}/>
+      <WeatherTile weatherData={weatherData} key={weatherData.__key ? weatherData.__key : i}/>
     );
     return (
       <div className="tiles-container" style={containerStyle}>

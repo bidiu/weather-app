@@ -12265,7 +12265,7 @@ var WeatherPage = exports.WeatherPage = _react2.default.createClass({
       $.ajax({
         url: _weatherApi.CUR_WEATHER_ENDPOINT + "?lat=" + coord.latitude + "&lon=" + coord.longitude + "&APPID=" + _weatherApi.API_KEY,
         success: function success(data, textStatus) {
-          data.__key = data.coord ? data.coord.lat + " " + data.coord.lon : data.name;
+          data.__key = data.coord ? data.coord.lat + "," + data.coord.lon : data.name;
           data.__geo = true;
           var weatherDataList = _this2.addToDataList(data);
           _this2.setState({
@@ -22828,8 +22828,7 @@ var TilesContainer = exports.TilesContainer = _react2.default.createClass({
       padding: "30px"
     };
     var tiles = this.props.weatherDataList.map(function (weatherData, i) {
-      return _react2.default.createElement(WeatherTile, { weatherData: weatherData,
-        key: weatherData.__key });
+      return _react2.default.createElement(WeatherTile, { weatherData: weatherData, key: weatherData.__key ? weatherData.__key : i });
     });
     return _react2.default.createElement(
       "div",
