@@ -21,7 +21,7 @@ export const TilesContainer = React.createClass({
   }
 });
 
-const CITY_NAME_LEN = 15;
+const CITY_NAME_LEN = 14;
 
 export const WeatherTile = React.createClass({
   componentWillUnmount: function() {

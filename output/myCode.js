@@ -22839,7 +22839,7 @@ var TilesContainer = exports.TilesContainer = _react2.default.createClass({
   }
 });
 
-var CITY_NAME_LEN = 15;
+var CITY_NAME_LEN = 14;
 
 var WeatherTile = exports.WeatherTile = _react2.default.createClass({
   displayName: "WeatherTile",
