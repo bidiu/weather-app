@@ -48,7 +48,7 @@ export const WeatherPage = React.createClass({
       $.ajax({
         url: `${CUR_WEATHER_ENDPOINT}?q=${city}&APPID=${API_KEY}`,
         success: (data, textStatus) => {
-          data.__key = data.coord ? (data.coord.lat + "," + data.coord.lon) : data.name;
+          data.__key = data.coord ? ("@" + data.coord.lat + "," + data.coord.lon) : data.name;
           data.__geo = false;
           const weatherDataList = this.addToDataList(data);
           this.setState({
@@ -71,7 +71,7 @@ export const WeatherPage = React.createClass({
       $.ajax({
         url: `${CUR_WEATHER_ENDPOINT}?lat=${coord.latitude}&lon=${coord.longitude}&APPID=${API_KEY}`,
         success: (data, textStatus) => {
-          data.__key = data.coord ? (data.coord.lat + "," + data.coord.lon) : data.name;
+          data.__key = data.coord ? ("@" + data.coord.lat + "," + data.coord.lon) : data.name;
           data.__geo = true;
           const weatherDataList = this.addToDataList(data);
           this.setState({
@@ -99,7 +99,8 @@ export const WeatherPage = React.createClass({
           coverRatio="0.1" myWeatherBtnHandler={this.myWeatherBtnHandler}
           cityInputChgHandler={this.cityInputChgHandler}
           weatherThereBtnHandler={this.weatherThereBtnHandler}
-          weatherDataList={this.state.weatherDataList}/>
+          weatherDataList={this.state.weatherDataList}
+          queryParams={this.props.location.query}/>
         <TilesContainer weatherDataList={this.state.weatherDataList}/>
       </div>
     );

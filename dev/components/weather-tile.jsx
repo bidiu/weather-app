@@ -1,5 +1,6 @@
 import React from "react";
-import { toCelsius, toKelvin, toTitleCase } from "../utils/helpers.jsx"
+import { Router, Route, IndexRoute, IndexLink, Link, hashHistory } from "react-router";
+import { toCelsius, toKelvin, toTitleCase, isCoordStr } from "../utils/helpers.jsx"
 
 export const TilesContainer = React.createClass({
   render: function() {
@@ -67,7 +68,10 @@ export const WeatherTile = React.createClass({
     }
 
     return (
-      <a href="#">
+      <Link to={
+        (weatherData.__key && isCoordStr(weatherData.__key)) ?
+        `/?${weatherData.__key}` : null
+      }>
         <div className="weather-tile" style={tileStyle}>
           <p className="tile-temperature">
             Temperature:&nbsp;&nbsp;{
@@ -89,7 +93,7 @@ export const WeatherTile = React.createClass({
             {cityName}
           </p>
         </div>
-      </a>
+      </Link>
     );
   }
 });

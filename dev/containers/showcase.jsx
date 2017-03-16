@@ -1,4 +1,5 @@
 import React from "react";
+import { MainTile } from "../components/main-tile.jsx";
 import { LocationForm } from "../components/location-form.jsx";
 
 export const Showcase = React.createClass({
@@ -28,6 +29,9 @@ export const Showcase = React.createClass({
       <div style={outerStyle}>
         <div style={coverStyle}>
           <div style={innerStyle}>
+            <MainTile float="left" margin="45px 0 0 60px" padding="20px"
+              width="260px" height="230px" color="#fff" textShadow="0 0 8px #aaa"
+              queryParams={this.props.queryParams} weatherDataList={this.props.weatherDataList}/>
             <LocationForm margin="45px 60px 0 0"
               cityName={this.props.cityName}
               cityInputChgHandler={this.props.cityInputChgHandler}

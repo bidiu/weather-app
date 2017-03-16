@@ -48,3 +48,17 @@ function rgbToHex(hex) {
   const values = hex.replace(/[^0-9,]/gi, '').split(',');
   return valuesToHex(...values);
 }
+
+// determine whether given string is a coordinate:
+//    @23.13,23.343, or
+//    @32,123.
+// if not a coordinate string, return false
+// otherwise, return a string array with 2 elements
+//    - latitude and longitude, both of them are returned as string
+export function isCoordStr(str) {
+  if (! str.startsWith("@")) return false;
+  const vals = str.substring(1).split(",");
+  if (vals.length !== 2) return false;
+  if (vals.some((val) => ! val.match(/^[+-]?\d+$|^[+-]?\d+\.\d*$/))) return false;
+  return vals;
+}
