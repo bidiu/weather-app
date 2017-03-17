@@ -15,7 +15,7 @@ export const WeatherPage = React.createClass({
     return {
       weatherDataList: new Array(INITIAL_TILE_NUM).fill(dummpyData),
       __dummyCnt: INITIAL_TILE_NUM,
-      cityInput: ""
+      cityInput: ''
     };
   },
   addToDataList: function(data) {
@@ -55,8 +55,7 @@ export const WeatherPage = React.createClass({
           hashHistory.push(`/?${data.__key}`);
           this.setState({
             weatherDataList: weatherDataList,
-            // currently not used
-            curKey: data.__key
+            keyJustFetched: data.__key
           });
         },
         error: function(jqXHR, textStatus, errorThrown) {
@@ -80,14 +79,18 @@ export const WeatherPage = React.createClass({
           hashHistory.push(`/?${data.__key}`);
           this.setState({
             weatherDataList: weatherDataList,
-            // currently not used
-            curKey: data.__key
+            keyJustFetched: data.__key
           });
         },
         error: function() {
           alert("Failed to fetch weather data.");
         }
       });
+    });
+  },
+  focusSwitchedCallback: function() {
+    this.setState({
+      keyJustFetched: null
     });
   },
   componentWillUnmount: function() {
@@ -106,7 +109,9 @@ export const WeatherPage = React.createClass({
           weatherThereBtnHandler={this.weatherThereBtnHandler}
           weatherDataList={this.state.weatherDataList}
           queryParams={this.props.location.query}/>
-        <TilesContainer weatherDataList={this.state.weatherDataList}/>
+        <TilesContainer weatherDataList={this.state.weatherDataList}
+          keyJustFetched={this.state.keyJustFetched}
+          focusSwitchedCallback={this.focusSwitchedCallback}/>
       </div>
     );
   }

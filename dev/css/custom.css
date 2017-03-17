@@ -6,9 +6,9 @@ body {
 
 /* navigation */
 nav {
-  -moz-box-shadow: 0 4px 12px #777777;
-  -webkit-box-shadow: 0 4px 12px #777777;
-  box-shadow: 0 4px 12px #777777;
+  -moz-box-shadow: 0 4px 12px #777;
+  -webkit-box-shadow: 0 4px 12px #777;
+  box-shadow: 0 4px 12px #777;
 }
 nav a {
   display: inline-block;
@@ -25,4 +25,18 @@ nav a:hover {
 a.active {
   background-color: #333;
   color: #fff;
+}
+
+/* tile related */
+.weather-tile {
+  -webkit-filter: drop-shadow(0px 0px 5px #666);
+  filter: drop-shadow(0px 0px 5px #666);
+}
+.weather-tile-active {
+  -webkit-filter: drop-shadow(0px 0px 5px #F75E11);
+  filter: drop-shadow(0px 0px 5px #F75E11);
+}
+.weather-tile-hover {
+  -webkit-filter: drop-shadow(0px 0px 5px #228AD4);
+  filter: drop-shadow(0px 0px 5px #228AD4);
 }

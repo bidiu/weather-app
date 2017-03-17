@@ -1,8 +1,20 @@
 import React from "react";
 import { Router, Route, IndexRoute, IndexLink, Link, hashHistory } from "react-router";
-import { toCelsius, toKelvin, toTitleCase, isCoordStr } from "../utils/helpers.jsx"
+import { toCelsius, toKelvin, toTitleCase, isCoordStr, constrainTextLen } from "../utils/helpers.jsx"
 
 export const TilesContainer = React.createClass({
+  getInitialState() {
+    return {
+      __tiles: []
+    }
+  },
+  focusGotCallback: function(__key) {
+    for (let tile of this.state.__tiles) {
+      if (tile.__key !== __key) {
+        tile.blurCallback();
+      }
+    }
+  },
   render: function() {
     const containerStyle = {
       width: 740,
@@ -11,7 +23,10 @@ export const TilesContainer = React.createClass({
       padding: "30px"
     };
     const tiles = this.props.weatherDataList.map((weatherData, i) =>
-      <WeatherTile weatherData={weatherData} key={weatherData.__key ? weatherData.__key : i}/>
+      <WeatherTile weatherData={weatherData} {...this.props}
+        __tiles={this.state.__tiles}
+        focusGotCallback={this.focusGotCallback}
+        key={weatherData.__key ? weatherData.__key : i.toString()}/>
     );
     return (
       <div className="tiles-container" style={containerStyle}>
@@ -21,12 +36,97 @@ export const TilesContainer = React.createClass({
   }
 });
 
+const DESC_LEN = 20;
 const CITY_NAME_LEN = 14;
 
 export const WeatherTile = React.createClass({
+  getInitialState: function() {
+    return {
+      focused: false,
+      divClass: "weather-tile"
+    };
+  },
+  componentDidMount: function() {
+    const __key = this.props.weatherData.__key;
+    const __tiles = this.props.__tiles;
+    __tiles.push({
+      __key: __key,
+      blurCallback: this.blurCallback,
+      focusCallback: this.becomeFocus
+    });
+    if (isCoordStr(__key)) {
+      this.becomeFocus();
+    }
+    // __this is the component
+    // 'this' will be the target element
+    const __this = this;
+    $(this.__div).click(function(e) {
+      if (!isCoordStr(__key) || __this.isFocused()) {
+        // current tile is a dummy tile or focused
+        return;
+      }
+      __this.props.focusSwitchedCallback();
+      __this.becomeFocus();
+    });
+    $(this.__div).hover(function(e) {
+      if (__this.isFocused() || __this.isDummy()) return;
+      __this.setState({
+        divClass: "weather-tile-hover"
+      });
+    }, function(e) {
+      if (! __this.isFocused()) {
+      //   __this.setState({
+      //     divClass: "weather-tile-active"
+      //   });
+      // } else {
+        __this.setState({
+          divClass: "weather-tile"
+        });
+      }
+    });
+  },
+  componentWillReceiveProps(nextProps) {
+    const __key = this.props.weatherData.__key;
+    const keyRecv = nextProps.keyJustFetched;
+    if (!this.isFocused() && __key && (__key === keyRecv)) {
+      this.becomeFocus();
+    }
+  },
   componentWillUnmount: function() {
-    // TODO
-    console.log("Tile Unmount!");
+    const __key = this.props.weatherData.__key
+    if (! isCoordStr(__key)) {
+      // current tile is a dummy tile
+      return;
+    }
+    const __tiles = this.props.__tiles;
+    for (let i = 0; i < __tiles.length; i++) {
+      if (__tiles[i].__key === __key) {
+        __tiles.splice(i, 1);
+        return;
+      }
+    }
+  },
+  blurCallback: function() {
+    if (this.isFocused()) {
+      this.setState({
+        focused: false,
+        divClass: "weather-tile"
+      });
+    }
+  },
+  becomeFocus: function() {
+    console.log(this.props.weatherData.name + " trying to be focused");
+    this.setState({
+      focused: true,
+      divClass: "weather-tile-active"
+    });
+    this.props.focusGotCallback(this.props.weatherData.__key);
+  },
+  isFocused: function() {
+    return this.state.focused;
+  },
+  isDummy: function() {
+    return ( this.props.weatherData.__key ? false : true );
   },
   render: function() {
     const weatherData = this.props.weatherData;
@@ -38,12 +138,10 @@ export const WeatherTile = React.createClass({
       textAlign: "center",
       float: "left",
       backgroundColor: "#aaa",
-      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
-      filter: "drop-shadow(0px 0px 5px #666)",
       borderRadius: "4px",
       MozBorderRadius: "4px",
       WebkitBorderRadius: "4px",
-      margin: "0 13px 39px 13px"
+      margin: "0 13px 36px 13px"
     };
     if (weatherData.__geo) {
       tileStyle.backgroundImage = "url(dev/images/gps.png)";
@@ -71,8 +169,9 @@ export const WeatherTile = React.createClass({
       <Link to={
         (weatherData.__key && isCoordStr(weatherData.__key)) ?
         `/?${weatherData.__key}` : null
-      }>
-        <div className="weather-tile" style={tileStyle}>
+      } activeClassName="active-tile">
+        <div className={this.state.divClass} style={tileStyle}
+          ref={(el) => this.__div = el}>
           <p className="tile-temperature">
             {
               weatherData.main ?
@@ -86,7 +185,8 @@ export const WeatherTile = React.createClass({
           <p className="tile-description">
             {
               (weatherData.weather && weatherData.weather.length > 0) ?
-              toTitleCase(weatherData.weather[0].description) : "Search a city to show"
+              constrainTextLen(toTitleCase(weatherData.weather[0].description), DESC_LEN) :
+              "Search a city to show"
             }
           </p>
           <p className="tile-city" style={cityStyle}>

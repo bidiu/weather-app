@@ -5583,7 +5583,7 @@ function rgbToHex(hex) {
 // otherwise, return a string array with 2 elements
 //    - latitude and longitude, both of them are returned as string
 function isCoordStr(str) {
-  if (!str.startsWith("@")) return false;
+  if (!str || !str.startsWith("@")) return false;
   var vals = str.substring(1).split(",");
   if (vals.length !== 2) return false;
   if (vals.some(function (val) {
@@ -12246,7 +12246,7 @@ var WeatherPage = exports.WeatherPage = _react2.default.createClass({
     return {
       weatherDataList: new Array(INITIAL_TILE_NUM).fill(dummpyData),
       __dummyCnt: INITIAL_TILE_NUM,
-      cityInput: ""
+      cityInput: ''
     };
   },
   addToDataList: function addToDataList(data) {
@@ -12287,8 +12287,7 @@ var WeatherPage = exports.WeatherPage = _react2.default.createClass({
           _reactRouter.hashHistory.push("/?" + data.__key);
           _this.setState({
             weatherDataList: weatherDataList,
-            // currently not used
-            curKey: data.__key
+            keyJustFetched: data.__key
           });
         },
         error: function error(jqXHR, textStatus, errorThrown) {
@@ -12314,14 +12313,18 @@ var WeatherPage = exports.WeatherPage = _react2.default.createClass({
           _reactRouter.hashHistory.push("/?" + data.__key);
           _this2.setState({
             weatherDataList: weatherDataList,
-            // currently not used
-            curKey: data.__key
+            keyJustFetched: data.__key
           });
         },
         error: function error() {
           alert("Failed to fetch weather data.");
         }
       });
+    });
+  },
+  focusSwitchedCallback: function focusSwitchedCallback() {
+    this.setState({
+      keyJustFetched: null
     });
   },
   componentWillUnmount: function componentWillUnmount() {
@@ -12341,7 +12344,9 @@ var WeatherPage = exports.WeatherPage = _react2.default.createClass({
         weatherThereBtnHandler: this.weatherThereBtnHandler,
         weatherDataList: this.state.weatherDataList,
         queryParams: this.props.location.query }),
-      _react2.default.createElement(_weatherTile.TilesContainer, { weatherDataList: this.state.weatherDataList })
+      _react2.default.createElement(_weatherTile.TilesContainer, { weatherDataList: this.state.weatherDataList,
+        keyJustFetched: this.state.keyJustFetched,
+        focusSwitchedCallback: this.focusSwitchedCallback })
     );
   }
 });
@@ -22607,13 +22612,15 @@ var Buttonify = exports.Buttonify = _react2.default.createClass({
   displayName: "Buttonify",
 
   componentDidMount: function componentDidMount() {
+    // __this is the component
+    // 'this' will be the target element
     var __this = this;
     $(this.__btn).hover(function (e) {
-      $(this).css("WebkitFilter", "drop-shadow(4px 4px 4px #333)");
-      $(this).css("filter", "drop-shadow(4px 4px 4px #333)");
+      $(this).css("WebkitFilter", "drop-shadow(4px 4px 4px #111)");
+      $(this).css("filter", "drop-shadow(4px 4px 4px #111)");
     }, function (e) {
-      $(this).css("WebkitFilter", "drop-shadow(4px 4px 2px #555)");
-      $(this).css("filter", "drop-shadow(4px 4px 2px #555)");
+      $(this).css("WebkitFilter", "drop-shadow(4px 4px 2px #333)");
+      $(this).css("filter", "drop-shadow(4px 4px 2px #333)");
     });
     $(this.__btn).mousedown(function (e) {
       $(this).css("background-color", (0, _helpers.transColor)(__this.props.backgroundColor, -0.4));
@@ -22630,8 +22637,8 @@ var Buttonify = exports.Buttonify = _react2.default.createClass({
     var _this = this;
 
     var btnStyle = {
-      WebkitFilter: "drop-shadow(4px 4px 2px #555)",
-      filter: "drop-shadow(4px 4px 2px #555)",
+      WebkitFilter: "drop-shadow(4px 4px 2px #333)",
+      filter: "drop-shadow(4px 4px 2px #333)",
       width: this.props.width || auto,
       height: this.props.height || auto,
       margin: this.props.margin || 0,
@@ -22765,9 +22772,9 @@ var LocationForm = exports.LocationForm = _react2.default.createClass({
       width: 180,
       height: 230,
       backgroundColor: "rgba(20, 20, 20, 0.5)",
-      borderRadius: "16px",
-      MozBorderRadius: "16px",
-      WebkitBorderRadius: "16px",
+      borderRadius: "12px",
+      MozBorderRadius: "12px",
+      WebkitBorderRadius: "12px",
       WebkitFilter: "drop-shadow(0px 0px 10px #555)",
       filter: "drop-shadow(0px 0px 10px #555)",
       color: "#fff",
@@ -23012,8 +23019,6 @@ var MainTile = exports.MainTile = _react2.default.createClass({
     // weather data's internal id (key)
     var queryParams = this.props.queryParams;
     var weatherData = this.getWeatherData(queryParams);
-    // TODO
-    console.log(weatherData);
     // prepare description
     var description = weatherData.weather && weatherData.weather.length > 0 ? (0, _helpers.toTitleCase)(weatherData.weather[0].description) : "Search a city to show.";
     description = (0, _helpers.constrainTextLen)(description, DESC_LEN);
@@ -23025,7 +23030,7 @@ var MainTile = exports.MainTile = _react2.default.createClass({
         cityCountry += ", " + weatherData.sys.country;
       }
     } else {
-      cityCountry = "Unknown Location";
+      cityCountry = null;
     }
 
     return _react2.default.createElement(
@@ -23143,6 +23148,8 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.WeatherTile = exports.TilesContainer = undefined;
 
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _react = __webpack_require__(4);
 
 var _react2 = _interopRequireDefault(_react);
@@ -23155,8 +23162,43 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 var TilesContainer = exports.TilesContainer = _react2.default.createClass({
   displayName: "TilesContainer",
+  getInitialState: function getInitialState() {
+    return {
+      __tiles: []
+    };
+  },
 
+  focusGotCallback: function focusGotCallback(__key) {
+    var _iteratorNormalCompletion = true;
+    var _didIteratorError = false;
+    var _iteratorError = undefined;
+
+    try {
+      for (var _iterator = this.state.__tiles[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+        var tile = _step.value;
+
+        if (tile.__key !== __key) {
+          tile.blurCallback();
+        }
+      }
+    } catch (err) {
+      _didIteratorError = true;
+      _iteratorError = err;
+    } finally {
+      try {
+        if (!_iteratorNormalCompletion && _iterator.return) {
+          _iterator.return();
+        }
+      } finally {
+        if (_didIteratorError) {
+          throw _iteratorError;
+        }
+      }
+    }
+  },
   render: function render() {
+    var _this = this;
+
     var containerStyle = {
       width: 740,
       overflow: "auto",
@@ -23164,7 +23206,10 @@ var TilesContainer = exports.TilesContainer = _react2.default.createClass({
       padding: "30px"
     };
     var tiles = this.props.weatherDataList.map(function (weatherData, i) {
-      return _react2.default.createElement(WeatherTile, { weatherData: weatherData, key: weatherData.__key ? weatherData.__key : i });
+      return _react2.default.createElement(WeatherTile, _extends({ weatherData: weatherData }, _this.props, {
+        __tiles: _this.state.__tiles,
+        focusGotCallback: _this.focusGotCallback,
+        key: weatherData.__key ? weatherData.__key : i.toString() }));
     });
     return _react2.default.createElement(
       "div",
@@ -23174,16 +23219,104 @@ var TilesContainer = exports.TilesContainer = _react2.default.createClass({
   }
 });
 
+var DESC_LEN = 20;
 var CITY_NAME_LEN = 14;
 
 var WeatherTile = exports.WeatherTile = _react2.default.createClass({
   displayName: "WeatherTile",
 
+  getInitialState: function getInitialState() {
+    return {
+      focused: false,
+      divClass: "weather-tile"
+    };
+  },
+  componentDidMount: function componentDidMount() {
+    var __key = this.props.weatherData.__key;
+    var __tiles = this.props.__tiles;
+    __tiles.push({
+      __key: __key,
+      blurCallback: this.blurCallback,
+      focusCallback: this.becomeFocus
+    });
+    if ((0, _helpers.isCoordStr)(__key)) {
+      this.becomeFocus();
+    }
+    // __this is the component
+    // 'this' will be the target element
+    var __this = this;
+    $(this.__div).click(function (e) {
+      if (!(0, _helpers.isCoordStr)(__key) || __this.isFocused()) {
+        // current tile is a dummy tile or focused
+        return;
+      }
+      __this.props.focusSwitchedCallback();
+      __this.becomeFocus();
+    });
+    $(this.__div).hover(function (e) {
+      if (__this.isFocused() || __this.isDummy()) return;
+      __this.setState({
+        divClass: "weather-tile-hover"
+      });
+    }, function (e) {
+      if (!__this.isFocused()) {
+        //   __this.setState({
+        //     divClass: "weather-tile-active"
+        //   });
+        // } else {
+        __this.setState({
+          divClass: "weather-tile"
+        });
+      }
+    });
+  },
+  componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+    var __key = this.props.weatherData.__key;
+    var keyRecv = nextProps.keyJustFetched;
+    if (!this.isFocused() && __key && __key === keyRecv) {
+      this.becomeFocus();
+    }
+  },
+
   componentWillUnmount: function componentWillUnmount() {
-    // TODO
-    console.log("Tile Unmount!");
+    var __key = this.props.weatherData.__key;
+    if (!(0, _helpers.isCoordStr)(__key)) {
+      // current tile is a dummy tile
+      return;
+    }
+    var __tiles = this.props.__tiles;
+    for (var i = 0; i < __tiles.length; i++) {
+      if (__tiles[i].__key === __key) {
+        __tiles.splice(i, 1);
+        return;
+      }
+    }
+  },
+  blurCallback: function blurCallback() {
+    if (this.isFocused()) {
+      this.setState({
+        focused: false,
+        divClass: "weather-tile"
+      });
+    }
+  },
+  becomeFocus: function becomeFocus() {
+    console.log(this.props.weatherData.name + " trying to be focused");
+    this.setState({
+      focused: true,
+      divClass: "weather-tile-active"
+    });
+    this.props.focusGotCallback(this.props.weatherData.__key);
+  },
+  isFocused: function isFocused() {
+    return this.state.focused;
+  },
+  isDummy: function isDummy() {
+    return this.props.weatherData.__key ? false : true;
   },
   render: function render() {
+    var _this2 = this;
+
     var weatherData = this.props.weatherData;
     var tileStyle = {
       height: 240,
@@ -23193,12 +23326,10 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
       textAlign: "center",
       float: "left",
       backgroundColor: "#aaa",
-      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
-      filter: "drop-shadow(0px 0px 5px #666)",
       borderRadius: "4px",
       MozBorderRadius: "4px",
       WebkitBorderRadius: "4px",
-      margin: "0 13px 39px 13px"
+      margin: "0 13px 36px 13px"
     };
     if (weatherData.__geo) {
       tileStyle.backgroundImage = "url(dev/images/gps.png)";
@@ -23223,10 +23354,13 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
 
     return _react2.default.createElement(
       _reactRouter.Link,
-      { to: weatherData.__key && (0, _helpers.isCoordStr)(weatherData.__key) ? "/?" + weatherData.__key : null },
+      { to: weatherData.__key && (0, _helpers.isCoordStr)(weatherData.__key) ? "/?" + weatherData.__key : null, activeClassName: "active-tile" },
       _react2.default.createElement(
         "div",
-        { className: "weather-tile", style: tileStyle },
+        { className: this.state.divClass, style: tileStyle,
+          ref: function ref(el) {
+            return _this2.__div = el;
+          } },
         _react2.default.createElement(
           "p",
           { className: "tile-temperature" },
@@ -23241,7 +23375,7 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
         _react2.default.createElement(
           "p",
           { className: "tile-description" },
-          weatherData.weather && weatherData.weather.length > 0 ? (0, _helpers.toTitleCase)(weatherData.weather[0].description) : "Search a city to show"
+          weatherData.weather && weatherData.weather.length > 0 ? (0, _helpers.constrainTextLen)((0, _helpers.toTitleCase)(weatherData.weather[0].description), DESC_LEN) : "Search a city to show"
         ),
         _react2.default.createElement(
           "p",

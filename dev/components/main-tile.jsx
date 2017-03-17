@@ -128,8 +128,6 @@ export const MainTile = React.createClass({
     // weather data's internal id (key)
     const queryParams = this.props.queryParams;
     const weatherData = this.getWeatherData(queryParams);
-    // TODO
-    console.log(weatherData);
     // prepare description
     var description = (weatherData.weather && weatherData.weather.length > 0) ?
         toTitleCase(weatherData.weather[0].description) : "Search a city to show.";
@@ -142,7 +140,7 @@ export const MainTile = React.createClass({
         cityCountry += (", " + weatherData.sys.country);
       }
     } else {
-      cityCountry = "Unknown Location";
+      cityCountry = null;
     }
 
     return (
