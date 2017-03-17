@@ -1,4 +1,5 @@
 import React from "react";
+import { hashHistory } from "react-router";
 import { Showcase } from "./showcase.jsx";
 import { TilesContainer } from "../components/weather-tile.jsx";
 import { getCurrentPos } from "../utils/geolocation.jsx";
@@ -51,8 +52,10 @@ export const WeatherPage = React.createClass({
           data.__key = data.coord ? ("@" + data.coord.lat + "," + data.coord.lon) : data.name;
           data.__geo = false;
           const weatherDataList = this.addToDataList(data);
+          hashHistory.push(`/?${data.__key}`);
           this.setState({
             weatherDataList: weatherDataList,
+            // currently not used
             curKey: data.__key
           });
         },
@@ -74,8 +77,10 @@ export const WeatherPage = React.createClass({
           data.__key = data.coord ? ("@" + data.coord.lat + "," + data.coord.lon) : data.name;
           data.__geo = true;
           const weatherDataList = this.addToDataList(data);
+          hashHistory.push(`/?${data.__key}`);
           this.setState({
             weatherDataList: weatherDataList,
+            // currently not used
             curKey: data.__key
           });
         },
