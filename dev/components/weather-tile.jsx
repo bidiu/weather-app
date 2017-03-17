@@ -74,7 +74,7 @@ export const WeatherTile = React.createClass({
       }>
         <div className="weather-tile" style={tileStyle}>
           <p className="tile-temperature">
-            Temperature:&nbsp;&nbsp;{
+            {
               weatherData.main ?
               toCelsius(weatherData.main.temp) :
               "--"
@@ -86,7 +86,7 @@ export const WeatherTile = React.createClass({
           <p className="tile-description">
             {
               (weatherData.weather && weatherData.weather.length > 0) ?
-              toTitleCase(weatherData.weather[0].description) : "Description not Available"
+              toTitleCase(weatherData.weather[0].description) : "Search a city to show"
             }
           </p>
           <p className="tile-city" style={cityStyle}>

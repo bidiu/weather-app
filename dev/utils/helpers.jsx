@@ -13,6 +13,12 @@ export function toTitleCase(str) {
     return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 }
 
+// from m per s
+// result will be rounded
+export function toKmPerH(val) {
+  return Math.round(val * 3600.0 / 1000);
+}
+
 // color related, messy, from StackOverflow, altered
 export function transColor(hex, lum) {
   hex = rgbToHex(hex);
@@ -61,4 +67,15 @@ export function isCoordStr(str) {
   if (vals.length !== 2) return false;
   if (vals.some((val) => ! val.match(/^[+-]?\d+$|^[+-]?\d+\.\d*$/))) return false;
   return vals;
+}
+
+export function constrainTextLen(text, len, trail = "...") {
+  if (text.length <= len) return text;
+  return text.substring(0, len - trail.length) + trail;
+}
+
+// minimalist for now
+export function formatUTC(utc) {
+  const date = new Date(utc * 1000);
+  return date.toString();
 }

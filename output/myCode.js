@@ -5507,8 +5507,11 @@ Object.defineProperty(exports, "__esModule", {
 exports.toCelsius = toCelsius;
 exports.toKelvin = toKelvin;
 exports.toTitleCase = toTitleCase;
+exports.toKmPerH = toKmPerH;
 exports.transColor = transColor;
 exports.isCoordStr = isCoordStr;
+exports.constrainTextLen = constrainTextLen;
+exports.formatUTC = formatUTC;
 
 function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
@@ -5527,6 +5530,12 @@ function toTitleCase(str) {
   return str.replace(/\w\S*/g, function (txt) {
     return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
   });
+}
+
+// from m per s
+// result will be rounded
+function toKmPerH(val) {
+  return Math.round(val * 3600.0 / 1000);
 }
 
 // color related, messy, from StackOverflow, altered
@@ -5581,6 +5590,19 @@ function isCoordStr(str) {
     return !val.match(/^[+-]?\d+$|^[+-]?\d+\.\d*$/);
   })) return false;
   return vals;
+}
+
+function constrainTextLen(text, len) {
+  var trail = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : "...";
+
+  if (text.length <= len) return text;
+  return text.substring(0, len - trail.length) + trail;
+}
+
+// minimalist for now
+function formatUTC(utc) {
+  var date = new Date(utc * 1000);
+  return date.toString();
 }
 
 /***/ }),
@@ -22736,12 +22758,12 @@ var LocationForm = exports.LocationForm = _react2.default.createClass({
       padding: "20px",
       width: 180,
       height: 230,
-      backgroundColor: "rgba(95, 95, 95, 0.6)",
+      backgroundColor: "rgba(20, 20, 20, 0.5)",
       borderRadius: "16px",
       MozBorderRadius: "16px",
       WebkitBorderRadius: "16px",
-      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
-      filter: "drop-shadow(0px 0px 5px #666)",
+      WebkitFilter: "drop-shadow(0px 0px 10px #555)",
+      filter: "drop-shadow(0px 0px 10px #555)",
       color: "#fff",
       textShadow: "0 0 8px #aaa"
     };
@@ -22835,6 +22857,8 @@ var _helpers = __webpack_require__(43);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var DESC_LEN = 24;
+
 var MainTile = exports.MainTile = _react2.default.createClass({
   displayName: "MainTile",
 
@@ -22900,34 +22924,203 @@ var MainTile = exports.MainTile = _react2.default.createClass({
 
     return {};
   },
+  parseSuntime: function parseSuntime(utc) {
+    var date = new Date(utc * 1000);
+    var hour = date.getHours();
+    var minute = date.getMinutes();
+    return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
+  },
   render: function render() {
-    var tailStyle = {
+    var tileStyle = {
       float: this.props.float,
       margin: this.props.margin || 0,
       padding: this.props.padding || 0,
       width: this.props.width || "auto",
       height: this.props.height || "auto",
-
-      backgroundColor: "rgba(95, 95, 95, 0.6)",
-      borderRadius: "16px",
-      MozBorderRadius: "16px",
-      WebkitBorderRadius: "16px",
-      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
-      filter: "drop-shadow(0px 0px 5px #666)",
-
       color: this.props.color || "inherit",
       textShadow: this.props.textShadow || "0 0 0 #000"
     };
-    if (this.props.float) tailStyle.float = this.props.float;
+    if (this.props.float) tileStyle.float = this.props.float;
+    var row1Style = {
+      overflow: "auto",
+      width: "100%"
+    };
+    var imgDivStyle = {
+      float: "left"
+    };
+    var imgStyle = {
+      width: 100,
+      height: 100
+    };
+    var tempDivStyle = {
+      float: "left",
+      height: 100,
+      margin: "0 0 0 24px",
+      fontSize: "56px",
+      minWidth: "120px",
+      textAlign: "center"
+    };
+    var cDegreeStyle = {
+      fontSize: "52px"
+    };
+    var minMaxDivStyle = {
+      fontSize: "16px"
+    };
+    var row2Style = {
+      margin: "12px 0 0 0",
+      fontSize: "14px",
+      overflow: "auto",
+      width: "100%"
+    };
+    var windMoreStyle = {
+      float: "left",
+      width: 134
+    };
+    var windMoreChildDivStyle = {
+      margin: "0 0 10px 0"
+    };
+    var descMoreStyle = {
+      float: "left",
+      height: 68,
+      padding: "0 0 0 12px",
+      margin: "0 0 10px 0",
+      borderLeftWidth: "1px",
+      borderLeftStyle: "solid"
+    };
+    var descStyle = {
+      fontSize: "20px",
+      padding: "4px 0 0 0"
+    };
+    var suntimeStyle = {
+      padding: "16px 0 0 0"
+    };
+    var cityCountryStyle = {
+      marginTop: "32px",
+      fontSize: "32px"
+    };
+    var timestampStyle = {
+      marginTop: "4px",
+      fontSize: "12px"
+    };
 
-    // weather data internal id (key)
+    // weather data's internal id (key)
     var queryParams = this.props.queryParams;
     var weatherData = this.getWeatherData(queryParams);
+    // TODO
     console.log(weatherData);
+    // prepare description
+    var description = weatherData.weather && weatherData.weather.length > 0 ? (0, _helpers.toTitleCase)(weatherData.weather[0].description) : "Search a city to show.";
+    description = (0, _helpers.constrainTextLen)(description, DESC_LEN);
+    // prepare city country
+    var cityCountry = "";
+    if (weatherData.name) {
+      cityCountry += weatherData.name;
+      if (weatherData.sys && weatherData.sys.country) {
+        cityCountry += ", " + weatherData.sys.country;
+      }
+    } else {
+      cityCountry = "Unknown Location";
+    }
+
     return _react2.default.createElement(
       "div",
-      { className: "main-tail", style: tailStyle },
-      "Hello, world."
+      { className: "maintile", style: tileStyle },
+      _react2.default.createElement(
+        "div",
+        { className: "maintile-row1", style: row1Style },
+        _react2.default.createElement(
+          "div",
+          { className: "maintile-img", style: imgDivStyle },
+          _react2.default.createElement("img", { src: "dev/images/sunny.png", alt: "sunny icon", title: "sunny icon", style: imgStyle })
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "maintile-temp", style: tempDivStyle },
+          weatherData.main ? (0, _helpers.toCelsius)(weatherData.main.temp) : "--",
+          _react2.default.createElement(
+            "span",
+            { style: cDegreeStyle },
+            "\xB0C"
+          ),
+          _react2.default.createElement("hr", { style: { margin: "0 0 10px 0" } }),
+          _react2.default.createElement(
+            "div",
+            { className: "maintile-minmax-temp", style: minMaxDivStyle },
+            weatherData.main && weatherData.main.temp_min ? (0, _helpers.toCelsius)(weatherData.main.temp_min) : "--",
+            "\xB0\xA0\xA0~\xA0\xA0",
+            weatherData.main && weatherData.main.temp_max ? (0, _helpers.toCelsius)(weatherData.main.temp_max) : "--",
+            "\xB0"
+          )
+        )
+      ),
+      _react2.default.createElement(
+        "div",
+        { className: "maintile-row2", style: row2Style },
+        _react2.default.createElement(
+          "div",
+          { className: "maintile-wind-more", style: windMoreStyle },
+          _react2.default.createElement(
+            "div",
+            { style: windMoreChildDivStyle },
+            "Wind:\xA0\xA0",
+            weatherData.wind && weatherData.wind.speed ? (0, _helpers.toKmPerH)(weatherData.wind.speed) : "--",
+            " km/h"
+          ),
+          _react2.default.createElement(
+            "div",
+            { style: windMoreChildDivStyle },
+            "Visibility:\xA0\xA0",
+            weatherData.visibility ? weatherData.visibility : "--",
+            " m"
+          ),
+          _react2.default.createElement(
+            "div",
+            { style: windMoreChildDivStyle },
+            "Humidity:\xA0\xA0",
+            weatherData.main && weatherData.main.humidity ? weatherData.main.humidity : "--",
+            "%"
+          )
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "maintile-desc-more", style: descMoreStyle },
+          _react2.default.createElement(
+            "div",
+            { style: descStyle },
+            description
+          ),
+          _react2.default.createElement(
+            "div",
+            { style: suntimeStyle },
+            _react2.default.createElement(
+              "span",
+              { style: { display: "inline-block", width: "108px" } },
+              "Sunrise:\xA0\xA0",
+              weatherData.sys && weatherData.sys.sunrise ? this.parseSuntime(weatherData.sys.sunrise) : "--:--"
+            ),
+            _react2.default.createElement(
+              "span",
+              null,
+              "Sunset:\xA0\xA0",
+              weatherData.sys && weatherData.sys.sunset ? this.parseSuntime(weatherData.sys.sunset) : "--:--"
+            )
+          )
+        )
+      ),
+      _react2.default.createElement(
+        "div",
+        { className: "maintile-row3" },
+        _react2.default.createElement(
+          "div",
+          { className: "cityCountry", style: cityCountryStyle },
+          cityCountry
+        ),
+        _react2.default.createElement(
+          "div",
+          { className: "dataTimestamp", style: timestampStyle },
+          weatherData.dt ? (0, _helpers.formatUTC)(weatherData.dt) : null
+        )
+      )
     );
   }
 });
@@ -23031,7 +23224,6 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
         _react2.default.createElement(
           "p",
           { className: "tile-temperature" },
-          "Temperature:\xA0\xA0",
           weatherData.main ? (0, _helpers.toCelsius)(weatherData.main.temp) : "--",
           " \xB0C"
         ),
@@ -23043,7 +23235,7 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
         _react2.default.createElement(
           "p",
           { className: "tile-description" },
-          weatherData.weather && weatherData.weather.length > 0 ? (0, _helpers.toTitleCase)(weatherData.weather[0].description) : "Description not Available"
+          weatherData.weather && weatherData.weather.length > 0 ? (0, _helpers.toTitleCase)(weatherData.weather[0].description) : "Search a city to show"
         ),
         _react2.default.createElement(
           "p",
@@ -23111,8 +23303,8 @@ var Showcase = exports.Showcase = _react2.default.createClass({
         _react2.default.createElement(
           "div",
           { style: innerStyle },
-          _react2.default.createElement(_mainTile.MainTile, { float: "left", margin: "45px 0 0 60px", padding: "20px",
-            width: "260px", height: "230px", color: "#fff", textShadow: "0 0 8px #aaa",
+          _react2.default.createElement(_mainTile.MainTile, { float: "left", margin: "24px 0 0 60px", padding: "20px 10px",
+            width: "380px", height: "272px", color: "#fff", textShadow: "0 0 12px #333",
             queryParams: this.props.queryParams, weatherDataList: this.props.weatherDataList }),
           _react2.default.createElement(_locationForm.LocationForm, { margin: "45px 60px 0 0",
             cityName: this.props.cityName,

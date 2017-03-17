@@ -9,12 +9,12 @@ export const LocationForm = React.createClass({
       padding: "20px",
       width: 180,
       height: 230,
-      backgroundColor: "rgba(95, 95, 95, 0.6)",
+      backgroundColor: "rgba(20, 20, 20, 0.5)",
       borderRadius: "16px",
       MozBorderRadius: "16px",
       WebkitBorderRadius: "16px",
-      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
-      filter: "drop-shadow(0px 0px 5px #666)",
+      WebkitFilter: "drop-shadow(0px 0px 10px #555)",
+      filter: "drop-shadow(0px 0px 10px #555)",
       color: "#fff",
       textShadow: "0 0 8px #aaa"
     };

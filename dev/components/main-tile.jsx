@@ -1,5 +1,9 @@
 import React from "react";
-import { toCelsius, toKelvin, toTitleCase, isCoordStr } from "../utils/helpers.jsx"
+import {
+  toCelsius, toKelvin, toTitleCase, isCoordStr,
+  toKmPerH, constrainTextLen, formatUTC } from "../utils/helpers.jsx"
+
+const DESC_LEN = 24;
 
 export const MainTile = React.createClass({
   // extract coordinate,
@@ -42,32 +46,179 @@ export const MainTile = React.createClass({
     }
     return {};
   },
+  parseSuntime: function(utc) {
+    const date = new Date(utc * 1000);
+    const hour = date.getHours();
+    const minute = date.getMinutes();
+    return `${hour<10 ? "0"+hour : hour}:${minute<10 ? "0"+minute : minute}`;
+  },
   render: function() {
-    const tailStyle = {
+    const tileStyle = {
       float: this.props.float,
       margin: this.props.margin || 0,
       padding: this.props.padding || 0,
       width: this.props.width || "auto",
       height: this.props.height || "auto",
-
-      backgroundColor: "rgba(95, 95, 95, 0.6)",
-      borderRadius: "16px",
-      MozBorderRadius: "16px",
-      WebkitBorderRadius: "16px",
-      WebkitFilter: "drop-shadow(0px 0px 5px #666)",
-      filter: "drop-shadow(0px 0px 5px #666)",
-
       color: this.props.color || "inherit",
       textShadow: this.props.textShadow || "0 0 0 #000"
     };
-    if (this.props.float) tailStyle.float = this.props.float;
+    if (this.props.float) tileStyle.float = this.props.float;
+    const row1Style = {
+      overflow: "auto",
+      width: "100%",
+    };
+    const imgDivStyle = {
+      float: "left",
+    };
+    const imgStyle = {
+      width: 100,
+      height: 100
+    };
+    const tempDivStyle = {
+      float: "left",
+      height: 100,
+      margin: "0 0 0 24px",
+      fontSize: "56px",
+      minWidth: "120px",
+      textAlign: "center"
+    };
+    const cDegreeStyle = {
+      fontSize: "52px"
+    };
+    const minMaxDivStyle = {
+      fontSize: "16px"
+    };
+    const row2Style = {
+      margin: "12px 0 0 0",
+      fontSize: "14px",
+      overflow: "auto",
+      width: "100%"
+    };
+    const windMoreStyle = {
+      float: "left",
+      width: 134
+    };
+    const windMoreChildDivStyle = {
+      margin: "0 0 10px 0"
+    };
+    const descMoreStyle = {
+      float: "left",
+      height: 68,
+      padding: "0 0 0 12px",
+      margin: "0 0 10px 0",
+      borderLeftWidth: "1px",
+      borderLeftStyle: "solid"
+    };
+    const descStyle = {
+      fontSize: "20px",
+      padding: "4px 0 0 0"
+    };
+    const suntimeStyle = {
+      padding: "16px 0 0 0"
+    };
+    const cityCountryStyle = {
+      marginTop: "32px",
+      fontSize: "32px"
+    };
+    const timestampStyle = {
+      marginTop: "4px",
+      fontSize: "12px"
+    };
 
     // weather data's internal id (key)
     const queryParams = this.props.queryParams;
     const weatherData = this.getWeatherData(queryParams);
+    // TODO
+    console.log(weatherData);
+    // prepare description
+    var description = (weatherData.weather && weatherData.weather.length > 0) ?
+        toTitleCase(weatherData.weather[0].description) : "Search a city to show.";
+    description = constrainTextLen(description, DESC_LEN);
+    // prepare city country
+    var cityCountry = "";
+    if (weatherData.name) {
+      cityCountry += weatherData.name;
+      if (weatherData.sys && weatherData.sys.country) {
+        cityCountry += (", " + weatherData.sys.country);
+      }
+    } else {
+      cityCountry = "Unknown Location";
+    }
+
     return (
-      <div className="main-tail" style={tailStyle}>
-        Hello, world.
+      <div className="maintile" style={tileStyle}>
+        <div className="maintile-row1" style={row1Style}>
+          <div className="maintile-img" style={imgDivStyle}>
+            <img src="dev/images/sunny.png" alt="sunny icon" title="sunny icon" style={imgStyle}/>
+          </div>
+          <div className="maintile-temp" style={tempDivStyle}>
+            {
+              weatherData.main ?
+              toCelsius(weatherData.main.temp) :
+              "--"
+            }<span style={cDegreeStyle}>&deg;C</span>
+            <hr style={{ margin: "0 0 10px 0" }}/>
+            <div className="maintile-minmax-temp" style={minMaxDivStyle}>
+              {
+                (weatherData.main && weatherData.main.temp_min) ?
+                toCelsius(weatherData.main.temp_min) : "--"
+              }&deg;&nbsp;&nbsp;~&nbsp;&nbsp;{
+                (weatherData.main && weatherData.main.temp_max) ?
+                toCelsius(weatherData.main.temp_max) : "--"
+              }&deg;
+            </div>
+          </div>
+        </div>
+        <div className="maintile-row2" style={row2Style}>
+          <div className="maintile-wind-more" style={windMoreStyle}>
+            <div style={windMoreChildDivStyle}>
+              Wind:&nbsp;&nbsp;{
+                (weatherData.wind && weatherData.wind.speed) ?
+                toKmPerH(weatherData.wind.speed) : "--"
+              } km&#47;h
+            </div>
+            <div style={windMoreChildDivStyle}>
+              Visibility:&nbsp;&nbsp;{
+                weatherData.visibility ? weatherData.visibility : "--"
+              } m
+            </div>
+            <div style={windMoreChildDivStyle}>
+              Humidity:&nbsp;&nbsp;{
+                (weatherData.main && weatherData.main.humidity) ?
+                weatherData.main.humidity : "--"
+              }&#37;
+            </div>
+          </div>
+          <div className="maintile-desc-more" style={descMoreStyle}>
+            <div style={descStyle}>
+              {description}
+            </div>
+            <div style={suntimeStyle}>
+              <span style={{ display: "inline-block", width: "108px" }}>
+                Sunrise:&nbsp;&nbsp;{
+                  (weatherData.sys && weatherData.sys.sunrise) ?
+                      this.parseSuntime(weatherData.sys.sunrise) : "--:--"
+                }
+              </span>
+              <span>
+                Sunset:&nbsp;&nbsp;{
+                  (weatherData.sys && weatherData.sys.sunset) ?
+                      this.parseSuntime(weatherData.sys.sunset) : "--:--"
+                }
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="maintile-row3">
+          <div className="cityCountry" style={cityCountryStyle}>
+            {cityCountry}
+          </div>
+          <div className="dataTimestamp" style={timestampStyle}>
+            {
+              weatherData.dt ? formatUTC(weatherData.dt) : null
+            }
+          </div>
+        </div>
       </div>
     );
   }
