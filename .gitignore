@@ -56,3 +56,8 @@ typings/
 
 # dotenv environment variables file
 .env
+
+# before is from github/gitignore
+# following is custom
+/public/**/*
+!/public/**/.gitkeep
