@@ -55,7 +55,7 @@ export const WeatherTile = React.createClass({
       focusCallback: this.becomeFocus
     });
     if (isCoordStr(__key)) {
-      this.becomeFocus();
+      this.becomeFocus(true);
     }
     // __this is the component
     // 'this' will be the target element
@@ -66,7 +66,7 @@ export const WeatherTile = React.createClass({
         return;
       }
       __this.props.focusSwitchedCallback();
-      __this.becomeFocus();
+      __this.becomeFocus(false);
     });
     $(this.__div).hover(function(e) {
       if (__this.isFocused() || __this.isDummy()) return;
@@ -89,7 +89,7 @@ export const WeatherTile = React.createClass({
     const __key = this.props.weatherData.__key;
     const keyRecv = nextProps.keyJustFetched;
     if (!this.isFocused() && __key && (__key === keyRecv)) {
-      this.becomeFocus();
+      this.becomeFocus(false);
     }
   },
   componentWillUnmount: function() {
@@ -114,8 +114,13 @@ export const WeatherTile = React.createClass({
       });
     }
   },
-  becomeFocus: function() {
+  becomeFocus: function(newlyMnted) {
     console.log(this.props.weatherData.name + " trying to be focused");
+    if (! newlyMnted) {
+      $("html body").animate({
+        scrollTop: 0
+      }, 100);
+    }
     this.setState({
       focused: true,
       divClass: "weather-tile-active"
@@ -134,10 +139,11 @@ export const WeatherTile = React.createClass({
       height: 240,
       width: 200,
       color: "#fff",
+      textShadow: "0 0 8px #888",
       padding: "10px 10px 5px 10px",
       textAlign: "center",
       float: "left",
-      backgroundColor: "#B397BA",
+      backgroundColor: "#ccc",
       borderRadius: "4px",
       MozBorderRadius: "4px",
       WebkitBorderRadius: "4px",

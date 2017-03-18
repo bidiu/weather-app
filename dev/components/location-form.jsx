@@ -45,7 +45,7 @@ export const LocationForm = React.createClass({
         <div style={containerStyle}>
           <div>
             <div className="location-form-text" style={textStyle}>
-              Check the weather &#64;
+              Check the weather in
             </div>
             <input name="cityName" type="text" style={inputStyle} value={cityName}
               placeholder="city name goes here" onChange={this.props.cityInputChgHandler}/>

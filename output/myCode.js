@@ -22885,7 +22885,7 @@ var LocationForm = exports.LocationForm = _react2.default.createClass({
           _react2.default.createElement(
             "div",
             { className: "location-form-text", style: textStyle },
-            "Check the weather @"
+            "Check the weather in"
           ),
           _react2.default.createElement("input", { name: "cityName", type: "text", style: inputStyle, value: cityName,
             placeholder: "city name goes here", onChange: this.props.cityInputChgHandler }),
@@ -23320,7 +23320,7 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
       focusCallback: this.becomeFocus
     });
     if ((0, _helpers.isCoordStr)(__key)) {
-      this.becomeFocus();
+      this.becomeFocus(true);
     }
     // __this is the component
     // 'this' will be the target element
@@ -23331,7 +23331,7 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
         return;
       }
       __this.props.focusSwitchedCallback();
-      __this.becomeFocus();
+      __this.becomeFocus(false);
     });
     $(this.__div).hover(function (e) {
       if (__this.isFocused() || __this.isDummy()) return;
@@ -23354,7 +23354,7 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
     var __key = this.props.weatherData.__key;
     var keyRecv = nextProps.keyJustFetched;
     if (!this.isFocused() && __key && __key === keyRecv) {
-      this.becomeFocus();
+      this.becomeFocus(false);
     }
   },
 
@@ -23380,8 +23380,13 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
       });
     }
   },
-  becomeFocus: function becomeFocus() {
+  becomeFocus: function becomeFocus(newlyMnted) {
     console.log(this.props.weatherData.name + " trying to be focused");
+    if (!newlyMnted) {
+      $("html body").animate({
+        scrollTop: 0
+      }, 100);
+    }
     this.setState({
       focused: true,
       divClass: "weather-tile-active"
@@ -23402,10 +23407,11 @@ var WeatherTile = exports.WeatherTile = _react2.default.createClass({
       height: 240,
       width: 200,
       color: "#fff",
+      textShadow: "0 0 8px #888",
       padding: "10px 10px 5px 10px",
       textAlign: "center",
       float: "left",
-      backgroundColor: "#B397BA",
+      backgroundColor: "#ccc",
       borderRadius: "4px",
       MozBorderRadius: "4px",
       WebkitBorderRadius: "4px",
