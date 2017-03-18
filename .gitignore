@@ -59,5 +59,9 @@ typings/
 
 # before is from github/gitignore
 # following is custom
-/public/**/*
-!/public/**/.gitkeep
+/public/**/*.html
+/public/**/*.js
+/public/**/*.css
+/public/**/*.png
+/public/**/*.jpg
+/public/**/*.ico
