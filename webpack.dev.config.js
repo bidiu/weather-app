@@ -5,8 +5,6 @@ var DEV = path.resolve(__dirname, "dev");
 var OUTPUT = path.resolve(__dirname, "public");
 
 var config = {
-  devtool: 'source-map',
-
   entry: DEV + "/index.jsx",
 
   output: {
@@ -14,16 +12,7 @@ var config = {
     filename: "bundle.js",
     publicPath: '/public/'
   },
-
-  plugins: [
-    new webpack.optimize.UglifyJsPlugin({
-      minimize: true,
-      compress: {
-        warnings: false
-      }
-    })
-  ],
-
+  
   module: {
     loaders: [{
         include: DEV,
