@@ -137,14 +137,14 @@ export const WeatherTile = React.createClass({
       padding: "10px 10px 5px 10px",
       textAlign: "center",
       float: "left",
-      backgroundColor: "#aaa",
+      backgroundColor: "#B397BA",
       borderRadius: "4px",
       MozBorderRadius: "4px",
       WebkitBorderRadius: "4px",
       margin: "0 13px 36px 13px"
     };
     if (weatherData.__geo) {
-      tileStyle.backgroundImage = "url(dev/images/gps.png)";
+      tileStyle.backgroundImage = "url(dev/images/gps-black.png)";
       tileStyle.backgroundSize = "20px 20px";
       tileStyle.backgroundRepeat = "no-repeat";
       tileStyle.backgroundPosition = "8px 8px";
@@ -180,7 +180,7 @@ export const WeatherTile = React.createClass({
             } &deg;C
           </p>
           <p className="tile-image">
-            <img src="dev/images/snow.png" alt="snow icon" title="snow icon" style={imgStyle}/>
+            <img src="dev/images/default.png" alt="default icon" title="default icon" style={imgStyle}/>
           </p>
           <p className="tile-description">
             {

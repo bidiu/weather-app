@@ -4,11 +4,12 @@ body {
   font-size: 16px;
 }
 
+
 /* navigation */
 nav {
-  -moz-box-shadow: 0 4px 12px #777;
-  -webkit-box-shadow: 0 4px 12px #777;
-  box-shadow: 0 4px 12px #777;
+  -moz-box-shadow: 0 2px 8px #333;
+  -webkit-box-shadow: 0 2px 8px #333;
+  box-shadow: 0 2px 8px #333;
 }
 nav a {
   display: inline-block;
@@ -27,6 +28,7 @@ a.active {
   color: #fff;
 }
 
+
 /* tile related */
 .weather-tile {
   -webkit-filter: drop-shadow(0px 0px 5px #666);
@@ -40,3 +42,58 @@ a.active {
   -webkit-filter: drop-shadow(0px 0px 5px #228AD4);
   filter: drop-shadow(0px 0px 5px #228AD4);
 }
+
+
+/* footer */
+footer {
+  background-color: #eee;
+  -webkit-filter: drop-shadow(0 5px 5px #aaa);
+  filter: drop-shadow(0 5px 5px #aaa);
+  width: 100%;
+  height: 90px;
+  line-height: 90px;
+  color: #777;
+  font-size: 12px;
+}
+footer > div {
+  overflow: auto;
+  width: 800px;
+
+  background-image: url(../images/logo.png);
+  background-size: 30px 30px;
+  background-position: 50% 50%;
+  background-repeat: no-repeat;
+  height: 100%;
+  margin: 0 auto;
+}
+.footer-copyright {
+  float: left;
+  margin-left: 10px;
+}
+/* quick links start */
+.footer-links-div {
+  overflow: auto;
+  width: 50%;
+
+  float: right;
+  margin-right: 5px;
+}
+.footer-links-ul {
+  overflow: auto;
+  width: 100%;
+
+  float: right;
+  list-style-type: none;
+  /* override browser's default margin for ul */
+  margin: 0;
+}
+.footer-links-li {
+  display: inline;
+  float: right;
+  margin: 0 5px;
+}
+.footer-links-ul a {
+  text-decoration: none;
+  color: #777;
+}
+/* quick links end */

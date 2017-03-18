@@ -101,7 +101,7 @@ export const WeatherPage = React.createClass({
     return (
       <div>
         <Showcase
-          offset="48px" padding="10px" width="780px" height="360px"
+          offset="46px" padding="10px" width="780px" height="360px"
           backgroundImage="url(dev/images/showcase-default.jpg)"
           cityName={this.state.cityInput}
           coverRatio="0.1" myWeatherBtnHandler={this.myWeatherBtnHandler}

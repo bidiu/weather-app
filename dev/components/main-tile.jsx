@@ -53,6 +53,10 @@ export const MainTile = React.createClass({
     return `${hour<10 ? "0"+hour : hour}:${minute<10 ? "0"+minute : minute}`;
   },
   render: function() {
+    // weather data's internal id (key)
+    const queryParams = this.props.queryParams;
+    const weatherData = this.getWeatherData(queryParams);
+
     const tileStyle = {
       float: this.props.float,
       margin: this.props.margin || 0,
@@ -62,7 +66,15 @@ export const MainTile = React.createClass({
       color: this.props.color || "inherit",
       textShadow: this.props.textShadow || "0 0 0 #000"
     };
-    if (this.props.float) tileStyle.float = this.props.float;
+    if (this.props.float) {
+      tileStyle.float = this.props.float;
+    }
+    if (weatherData.__geo) {
+      tileStyle.backgroundImage = "url(dev/images/gps.png)";
+      tileStyle.backgroundSize = "28px 28px";
+      tileStyle.backgroundRepeat = "no-repeat";
+      tileStyle.backgroundPosition = "88% 10%";
+    }
     const row1Style = {
       overflow: "auto",
       width: "100%",
@@ -125,9 +137,6 @@ export const MainTile = React.createClass({
       fontSize: "12px"
     };
 
-    // weather data's internal id (key)
-    const queryParams = this.props.queryParams;
-    const weatherData = this.getWeatherData(queryParams);
     // prepare description
     var description = (weatherData.weather && weatherData.weather.length > 0) ?
         toTitleCase(weatherData.weather[0].description) : "Search a city to show.";
