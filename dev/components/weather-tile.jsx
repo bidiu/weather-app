@@ -115,7 +115,7 @@ export const WeatherTile = React.createClass({
   becomeFocus: function(newlyMnted) {
     console.log(this.props.weatherData.name + " trying to be focused");
     if (! newlyMnted) {
-      $("html body").animate({
+      $("html, body").animate({
         scrollTop: 0
       }, 100);
     }
