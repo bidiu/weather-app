@@ -6,7 +6,6 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var cities = require('./routes/cities');
-// var users = require('./routes/users');
 
 var app = express();
 
@@ -22,7 +21,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // add city REST resources routing
 app.use('/cities', cities);
-// app.use('/users', users);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
