@@ -28,6 +28,9 @@ function cleanDir(dirPath, opt) {
   }
 }
 
+console.log("This is a development build, for production build, execute: ");
+console.log("\n\twebpack --config webpack.production.config.js\n");
+
 // clean previous build - custom script
 cleanDir(OUTPUT, {
   ignore: ['.gitkeep'],
