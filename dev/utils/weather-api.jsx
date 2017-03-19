@@ -1,3 +1,5 @@
-export const API_KEY = "d006ff2025873b526e5fdfd99a758473";
+const CONFIG = require('../../config');
+
+export const API_KEY = CONFIG.apiKey;
 
 export const CUR_WEATHER_ENDPOINT = "http://api.openweathermap.org/data/2.5/weather";
