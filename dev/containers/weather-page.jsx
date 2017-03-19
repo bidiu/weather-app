@@ -1,11 +1,16 @@
 import React from "react";
 import { hashHistory } from "react-router";
+import { ProgressBar } from "../components/common/progress-bar.jsx"
 import { Showcase } from "./showcase.jsx";
 import { TilesContainer } from "../components/weather-tile.jsx";
 import { getCurrentPos } from "../utils/geolocation.jsx";
 import { API_KEY, CUR_WEATHER_ENDPOINT } from "../utils/weather-api.jsx";
 
 const INITIAL_TILE_NUM = 3;
+/* following is progress bar related */
+const START_INTERVAL = 10;
+const FINISH_INTERVAL = 1;
+const STOP_PROGRESS = 75;
 
 export const WeatherPage = React.createClass({
   getInitialState: function() {
@@ -15,7 +20,10 @@ export const WeatherPage = React.createClass({
     return {
       weatherDataList: new Array(INITIAL_TILE_NUM).fill(dummpyData),
       __dummyCnt: INITIAL_TILE_NUM,
-      cityInput: ''
+      cityInput: '',
+      // following is progress related
+      progress: 0,
+      visible: false
     };
   },
   addToDataList: function(data) {
@@ -42,9 +50,48 @@ export const WeatherPage = React.createClass({
       cityInput: e.target.value
     });
   },
+  // return increased progress
+  increaseProgress: function(amount) {
+    const nextProgress = this.state.progress + amount;
+    this.setState({
+      progress: nextProgress
+    });
+    return nextProgress;
+  },
+  startProgressBar: function() {
+    if (this.state.visible) return false;
+    this.setState({
+      visible: true
+    });
+    this.timerId = setInterval(() => {
+      const progress = this.increaseProgress(0.1);
+      if (progress >= STOP_PROGRESS) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+      }
+    }, START_INTERVAL);
+    return true;
+  },
+  finishProgressBar: function() {
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
+    this.timerId = setInterval(() => {
+      const progress = this.increaseProgress(1);
+      if (progress >= 100) {
+        clearInterval(this.timerId);
+        this.timerId = null;
+        this.setState({
+          visible: false,
+          progress: 0
+        });
+      }
+    }, FINISH_INTERVAL);
+  },
   weatherThereBtnHandler: function(e) {
     const city = this.state.cityInput.trim();
     if (city.length > 0) {
+      const triggered = this.startProgressBar();
       this.setState({ cityInput: "" });
       $.ajax({
         url: `${CUR_WEATHER_ENDPOINT}?q=${city}&APPID=${API_KEY}`,
@@ -57,8 +104,10 @@ export const WeatherPage = React.createClass({
             weatherDataList: weatherDataList,
             keyJustFetched: data.__key
           });
+          if (triggered) this.finishProgressBar();
         },
-        error: function(jqXHR, textStatus, errorThrown) {
+        error: (jqXHR, textStatus, errorThrown) => {
+          if (triggered) this.finishProgressBar();
           if (jqXHR.status === 404 || jqXHR.status === 502) {
             alert("Cannot find any weather data of your specified city.");
           } else {
@@ -69,6 +118,7 @@ export const WeatherPage = React.createClass({
     }
   },
   myWeatherBtnHandler: function(e) {
+    const triggered = this.startProgressBar();
     getCurrentPos((coord) => {
       $.ajax({
         url: `${CUR_WEATHER_ENDPOINT}?lat=${coord.latitude}&lon=${coord.longitude}&APPID=${API_KEY}`,
@@ -81,11 +131,15 @@ export const WeatherPage = React.createClass({
             weatherDataList: weatherDataList,
             keyJustFetched: data.__key
           });
+          if (triggered) this.finishProgressBar();
         },
-        error: function() {
+        error: () => {
+          if (triggered) this.finishProgressBar();
           alert("Failed to fetch weather data.");
         }
       });
+    }, (code) => {
+      if (triggered) this.finishProgressBar();
     });
   },
   focusSwitchedCallback: function() {
@@ -94,12 +148,15 @@ export const WeatherPage = React.createClass({
     });
   },
   componentWillUnmount: function() {
-    // TODO
-    console.log("WeatherPage Unmount!");
+    if (this.timerId) {
+      clearInterval(this.timerId);
+    }
   },
   render: function() {
     return (
       <div>
+        <ProgressBar backgroundColor="#222" foregroundColor="#A8D6F7"
+          progress={this.state.progress} visible={this.state.visible}/>
         <Showcase
           offset="46px" padding="10px" width="780px" height="360px"
           backgroundImage="url(/images/showcase-default.jpg)"

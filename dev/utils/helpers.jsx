@@ -79,3 +79,10 @@ export function formatUTC(utc) {
   const date = new Date(utc * 1000);
   return date.toString();
 }
+
+export const Z_INDEX = {
+  navBar: 100,
+  progressBar: 200,
+  bottom: Number.MIN_SAFE_INTEGER,
+  top: Number.MAX_SAFE_INTEGER
+};

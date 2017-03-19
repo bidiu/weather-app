@@ -1,5 +1,6 @@
 import React from "react";
 import { Router, Route, IndexRoute, IndexLink, Link, hashHistory } from "react-router";
+import { Z_INDEX } from "../../utils/helpers.jsx";
 
 // navigation bar, needs external CSS
 export const NavBar = React.createClass({
@@ -11,7 +12,7 @@ export const NavBar = React.createClass({
       position: "fixed",
       top: 0,
       left: 0,
-      zIndex: Number.MAX_SAFE_INTEGER,
+      zIndex: Z_INDEX.navBar,
       margin: 0,
       padding: "0 10px"
     };
