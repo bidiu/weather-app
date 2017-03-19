@@ -1,6 +1,7 @@
 var webpack = require("webpack");
 var path = require("path");
 var fs = require('fs');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var DEV = path.resolve(__dirname, "dev");
 var OUTPUT = path.resolve(__dirname, "public");
@@ -45,6 +46,11 @@ var config = {
   },
 
   plugins: [
+    new CopyWebpackPlugin([
+      { from: DEV + '/images', to: OUTPUT + '/images' },
+      { from: DEV + '/css', to: OUTPUT + '/stylesheets' },
+      { from: path.resolve(__dirname, 'index.html'), to: OUTPUT }
+    ]),
     new webpack.optimize.UglifyJsPlugin({
       minimize: true,
       compress: {

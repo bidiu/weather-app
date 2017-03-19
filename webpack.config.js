@@ -1,6 +1,7 @@
 var webpack = require("webpack");
 var path = require("path");
 var fs = require('fs');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 var DEV = path.resolve(__dirname, "dev");
 var OUTPUT = path.resolve(__dirname, "public");
@@ -34,18 +35,28 @@ cleanDir(OUTPUT, {
 });
 
 var config = {
-  entry: DEV + "/index.jsx",
+  entry: {
+    'javascripts/bundle.js': DEV + '/index.jsx',
+  },
 
   output: {
-    path: OUTPUT + '/javascripts',
-    filename: "bundle.js",
+    path: OUTPUT + '/',
+    filename: '[name]',
     publicPath: '/public/'
   },
 
+  plugins: [
+    new CopyWebpackPlugin([
+      { from: DEV + '/images', to: OUTPUT + '/images' },
+      { from: DEV + '/css', to: OUTPUT + '/stylesheets' },
+      { from: path.resolve(__dirname, 'index.html'), to: OUTPUT }
+    ])
+  ],
+
   module: {
     loaders: [{
-        include: DEV,
-        loader: "babel-loader",
+      test: /\.jsx$/,
+      loader: 'babel-loader'
     }]
   }
 };
