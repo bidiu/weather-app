@@ -70,7 +70,7 @@ export const MainTile = React.createClass({
       tileStyle.float = this.props.float;
     }
     if (weatherData.__geo) {
-      tileStyle.backgroundImage = "url(dev/images/gps.png)";
+      tileStyle.backgroundImage = "url(/images/gps.png)";
       tileStyle.backgroundSize = "28px 28px";
       tileStyle.backgroundRepeat = "no-repeat";
       tileStyle.backgroundPosition = "88% 10%";
@@ -156,7 +156,7 @@ export const MainTile = React.createClass({
       <div className="maintile" style={tileStyle}>
         <div className="maintile-row1" style={row1Style}>
           <div className="maintile-img" style={imgDivStyle}>
-            <img src="dev/images/sunny.png" alt="sunny icon" title="sunny icon" style={imgStyle}/>
+            <img src="/images/sunny.png" alt="sunny icon" title="sunny icon" style={imgStyle}/>
           </div>
           <div className="maintile-temp" style={tempDivStyle}>
             {
