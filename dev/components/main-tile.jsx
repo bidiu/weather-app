@@ -1,7 +1,7 @@
 import React from "react";
 import {
   toCelsius, toKelvin, toTitleCase, isCoordStr,
-  toKmPerH, constrainTextLen, formatUTC } from "../utils/helpers.jsx"
+  toKmPerH, constrainTextLen, formatUTC, getWeatherImage } from "../utils/helpers.jsx"
 
 const DESC_LEN = 24;
 
@@ -140,6 +140,7 @@ export const MainTile = React.createClass({
     // prepare description
     var description = (weatherData.weather && weatherData.weather.length > 0) ?
         toTitleCase(weatherData.weather[0].description) : "Search a city to show.";
+    const weatherImg = getWeatherImage(description);
     description = constrainTextLen(description, DESC_LEN);
     // prepare city country
     var cityCountry = "";
@@ -156,7 +157,7 @@ export const MainTile = React.createClass({
       <div className="maintile" style={tileStyle}>
         <div className="maintile-row1" style={row1Style}>
           <div className="maintile-img" style={imgDivStyle}>
-            <img src="/images/sunny.png" alt="sunny icon" title="sunny icon" style={imgStyle}/>
+            <img src={weatherImg.src} alt={weatherImg.alt} title={weatherImg.title} style={imgStyle}/>
           </div>
           <div className="maintile-temp" style={tempDivStyle}>
             {

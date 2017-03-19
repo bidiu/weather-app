@@ -1,6 +1,8 @@
 import React from "react";
 import { Router, Route, IndexRoute, IndexLink, Link, hashHistory } from "react-router";
-import { toCelsius, toKelvin, toTitleCase, isCoordStr, constrainTextLen } from "../utils/helpers.jsx"
+import {
+  toCelsius, toKelvin, toTitleCase, isCoordStr, constrainTextLen,
+  getWeatherImage } from "../utils/helpers.jsx"
 
 export const TilesContainer = React.createClass({
   getInitialState() {
@@ -75,10 +77,6 @@ export const WeatherTile = React.createClass({
       });
     }, function(e) {
       if (! __this.isFocused()) {
-      //   __this.setState({
-      //     divClass: "weather-tile-active"
-      //   });
-      // } else {
         __this.setState({
           divClass: "weather-tile"
         });
@@ -170,6 +168,10 @@ export const WeatherTile = React.createClass({
     if (cityName.length > CITY_NAME_LEN) {
       cityName = cityName.substring(0, CITY_NAME_LEN - 3) + "...";
     }
+    const description = (weatherData.weather && weatherData.weather.length > 0) ?
+        toTitleCase(weatherData.weather[0].description) : "Search a city to show";
+    const weatherImg = getWeatherImage(description);
+    constrainTextLen(description, DESC_LEN);
 
     return (
       <Link to={
@@ -186,14 +188,10 @@ export const WeatherTile = React.createClass({
             } &deg;C
           </p>
           <p className="tile-image">
-            <img src="/images/default.png" alt="default icon" title="default icon" style={imgStyle}/>
+            <img src={weatherImg.src} alt={weatherImg.alt} title={weatherImg.title} style={imgStyle}/>
           </p>
           <p className="tile-description">
-            {
-              (weatherData.weather && weatherData.weather.length > 0) ?
-              constrainTextLen(toTitleCase(weatherData.weather[0].description), DESC_LEN) :
-              "Search a city to show"
-            }
+            {description}
           </p>
           <p className="tile-city" style={cityStyle}>
             {cityName}

@@ -86,3 +86,26 @@ export const Z_INDEX = {
   bottom: Number.MIN_SAFE_INTEGER,
   top: Number.MAX_SAFE_INTEGER
 };
+
+export function getWeatherImage(description) {
+  const des = description.toLowerCase();
+  if (des.includes("overcast") || des.includes("cloud")) {
+    return { src: "/images/cloudy.png", alt: "cloud", title: "cloud" };
+  }
+  else if (des.includes("rain")) {
+    return { src: "/images/rain.png", alt: "rain", title: "rain" };
+  }
+  else if (des.includes("snow")) {
+    return { src: "/images/snow.png", alt: "snow", title: "snow" };
+  }
+  else if (des.includes("storm") || des.includes("thunder")
+      || des.includes("lighting")) {
+    return { src: "/images/storm.png", alt: "storm", title: "storm" };
+  }
+  else if (des.includes("sun") || des.includes("clear")) {
+    return { src: "/images/sunny.png", alt: "sunny", title: "sunny" };
+  }
+  else {
+    return { src: "/images/default.png", alt: "default", title: "default" };
+  }
+};
