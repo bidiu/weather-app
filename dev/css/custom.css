@@ -4,6 +4,9 @@ body {
   font-size: 16px;
 }
 
+button {
+  outline: none;
+}
 
 /* navigation */
 nav {

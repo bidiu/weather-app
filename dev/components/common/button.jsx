@@ -7,11 +7,11 @@ export const Buttonify = React.createClass({
     // 'this' will be the target element
     const __this = this;
     $(this.__btn).hover(function(e) {
-      $(this).css("WebkitFilter", "drop-shadow(4px 4px 4px #111)");
-      $(this).css("filter", "drop-shadow(4px 4px 4px #111)");
+      $(this).css("WebkitFilter", "drop-shadow(1px 1px 1px #000)");
+      $(this).css("filter", "drop-shadow(1px 1px 1px #000)");
     }, function(e) {
-      $(this).css("WebkitFilter", "drop-shadow(4px 4px 2px #333)");
-      $(this).css("filter", "drop-shadow(4px 4px 2px #333)");
+      $(this).css("WebkitFilter", "drop-shadow(0 0 1px #222)");
+      $(this).css("filter", "drop-shadow(0 0 1px #222)");
     });
     $(this.__btn).mousedown(function(e) {
       $(this).css("background-color", transColor(__this.props.backgroundColor, -0.4));
@@ -26,8 +26,8 @@ export const Buttonify = React.createClass({
   },
   render: function() {
     const btnStyle = {
-      WebkitFilter: "drop-shadow(4px 4px 2px #333)",
-      filter: "drop-shadow(4px 4px 2px #333)",
+      WebkitFilter: "drop-shadow(0 0 1px #222)",
+      filter: "drop-shadow(0 0 1px #222)",
       width: this.props.width || auto,
       height: this.props.height || auto,
       margin: this.props.margin || 0,

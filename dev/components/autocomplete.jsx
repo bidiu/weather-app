@@ -2,6 +2,8 @@ import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
+const WIDTH = 220;
+
 export const AutoCompleteWrapper = React.createClass({
   getInitialState: function() {
     return {
@@ -28,6 +30,12 @@ export const AutoCompleteWrapper = React.createClass({
     this.props.onUpdateInput(inputValue);
   },
   render: function() {
+    const textFieldStyle = {
+      width: `${WIDTH}px`
+    };
+    const listStyle = {
+      width: `${WIDTH}px`
+    }
     return (
       <MuiThemeProvider>
         <AutoComplete
@@ -35,7 +43,9 @@ export const AutoCompleteWrapper = React.createClass({
           dataSource={this.state.dataSource}
           onUpdateInput={this.onUpdateInput}
           filter={AutoComplete.caseInsensitiveFilter}
-          floatingLabelText="city name goes here"/>
+          floatingLabelText="city name goes here"
+          textFieldStyle={textFieldStyle}
+          listStyle={listStyle}/>
       </MuiThemeProvider>
     );
   }

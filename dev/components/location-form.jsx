@@ -7,38 +7,29 @@ export const LocationForm = React.createClass({
     const formStyle = {
       float: "right",
       margin: this.props.margin,
-      padding: "20px",
-      width: 180,
-      height: 230,
-      backgroundColor: "rgba(20, 20, 20, 0.5)",
-      borderRadius: "12px",
-      MozBorderRadius: "12px",
-      WebkitBorderRadius: "12px",
-      WebkitFilter: "drop-shadow(0px 0px 10px #555)",
-      filter: "drop-shadow(0px 0px 10px #555)",
-      color: "#fff",
-      textShadow: "0 0 8px #aaa"
+      padding: "10px",
+      width: 220,
+      height: 260,
+      backgroundColor: "#fff",
+      borderRadius: "4px",
+      MozBorderRadius: "4px",
+      WebkitBorderRadius: "4px",
+      MozBoxShadow: "0px 0px 4px #33e7ff",
+      WebkitBoxShadow: "0px 0px 4px #33e7ff",
+      boxShadow: "0px 0px 4px #33e7ff",
+      color: "#555"
     };
     const containerStyle = {
-      width: 160,
-      margin: "0 auto"
+      width: "100%"
     };
     const textStyle = {
-      margin: "10px 0"
+      margin: "10px 0 0 0"
     };
-    const inputStyle = {
-      display: "block",
-      width: 152,
-      height: 32,
-      opacity: "1",
-      borderRadius: "5px",
-      MozBorderRadius: "5px",
-      WebkitBorderRadius: "5px",
-      borderWidth: 0,
-      padding: "0 0 0 8px",
-      margin: "10px 0",
-      WebkitFilter: "drop-shadow(4px 4px 2px #555)",
-      filter: "drop-shadow(4px 4px 2px #555)",
+    const delimiterStyle = {
+      margin: "20px 0",
+      backgroundColor: "#ccc",
+      width: "100%",
+      height: "1px"
     };
     const cityName = this.props.cityName;
     return (
@@ -51,21 +42,21 @@ export const LocationForm = React.createClass({
             {/* <input name="cityName" type="text" style={inputStyle} value={cityName}
               placeholder="city name goes here" onChange={this.props.cityInputChgHandler}/> */}
             <AutoCompleteWrapper onUpdateInput={this.props.cityInputChgHandler}/>
-            <Buttonify display="block" width="160px" height="32px" opacity="1"
-              borderRadius="5px" backgroundColor="rgb(255, 141, 0)" type="submit"
-              margin="10px 0" color="#333" fontWeight="bold" fontSize="14px"
+            <Buttonify display="block" width="100%" height="36px" opacity="1"
+              borderRadius="2px" backgroundColor="#00bcd6" type="submit"
+              margin="10px 0" color="#fff" fontWeight="normal" fontSize="14px"
               clickHandler={this.props.weatherThereBtnHandler}>
               Get Weather There
             </Buttonify>
           </div>
-          <hr style={{ margin: "20px 0" }}/>
+          <div style={delimiterStyle}></div>
           <div>
             <div className="location-form-text" style={textStyle}>
-              Get weather near me
+              or get weather near me
             </div>
-            <Buttonify display="block" width="160px" height="32px" opacity="1"
-              borderRadius="5px" backgroundColor="rgb(255, 141, 0)" type="button"
-              margin="10px 0" color="#333" fontWeight="bold" fontSize="14px"
+            <Buttonify display="block" width="100%" height="36px" opacity="1"
+              borderRadius="2px" backgroundColor="#00bcd6" type="button"
+              margin="10px 0" color="#fff" fontWeight="normal" fontSize="14px"
               clickHandler={this.props.myWeatherBtnHandler}>
               Get My Weather
             </Buttonify>

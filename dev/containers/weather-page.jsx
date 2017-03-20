@@ -155,7 +155,7 @@ export const WeatherPage = React.createClass({
   render: function() {
     return (
       <div>
-        <ProgressBar backgroundColor="#222" foregroundColor="#A8D6F7"
+        <ProgressBar backgroundColor="#222" foregroundColor="#a1dce3"
           progress={this.state.progress} visible={this.state.visible}/>
         <Showcase
           offset="46px" padding="10px" width="780px" height="360px"
