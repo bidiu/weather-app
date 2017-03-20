@@ -29,13 +29,17 @@ export const AutoCompleteWrapper = React.createClass({
     });
     this.props.onUpdateInput(inputValue);
   },
+  onNewRequest: function() {
+    this.__autoComplete.focus();
+  },
   render: function() {
     const textFieldStyle = {
       width: `${WIDTH}px`
     };
     const listStyle = {
       width: `${WIDTH}px`
-    }
+    };
+    // console.log(this.props.inputValue);
     return (
       <MuiThemeProvider>
         <AutoComplete
@@ -44,8 +48,11 @@ export const AutoCompleteWrapper = React.createClass({
           onUpdateInput={this.onUpdateInput}
           filter={AutoComplete.caseInsensitiveFilter}
           floatingLabelText="city name goes here"
+          searchText={this.props.inputValue}
           textFieldStyle={textFieldStyle}
-          listStyle={listStyle}/>
+          onNewRequest={this.onNewRequest}
+          listStyle={listStyle}
+          ref={(el) => this.__autoComplete = el}/>
       </MuiThemeProvider>
     );
   }
