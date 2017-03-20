@@ -165,7 +165,8 @@ export const WeatherPage = React.createClass({
           cityInputChgHandler={this.cityInputChgHandler}
           weatherThereBtnHandler={this.weatherThereBtnHandler}
           weatherDataList={this.state.weatherDataList}
-          queryParams={this.props.location.query}/>
+          queryParams={this.props.location.query}
+          showMainArea={true} showForm={true}/>
         <TilesContainer weatherDataList={this.state.weatherDataList}
           keyJustFetched={this.state.keyJustFetched}
           focusSwitchedCallback={this.focusSwitchedCallback}/>

@@ -29,14 +29,20 @@ export const Showcase = React.createClass({
       <div style={outerStyle}>
         <div style={coverStyle}>
           <div style={innerStyle}>
-            <MainTile float="left" margin="24px 0 0 30px" padding="20px 10px"
-              width="460px" height="272px" color="#fff" textShadow="0 0 12px #333"
-              queryParams={this.props.queryParams} weatherDataList={this.props.weatherDataList}/>
-            <LocationForm margin="40px 30px 0 0"
-              cityName={this.props.cityName}
-              cityInputChgHandler={this.props.cityInputChgHandler}
-              weatherThereBtnHandler={this.props.weatherThereBtnHandler}
-              myWeatherBtnHandler={this.props.myWeatherBtnHandler}/>
+            {
+              this.props.showMainArea &&
+              <MainTile float="left" margin="24px 0 0 30px" padding="20px 10px"
+                width="460px" height="272px" color="#fff" textShadow="0 0 12px #333"
+                queryParams={this.props.queryParams} weatherDataList={this.props.weatherDataList}/>
+            }
+            {
+              this.props.showForm && 
+              <LocationForm margin="40px 30px 0 0"
+                cityName={this.props.cityName}
+                cityInputChgHandler={this.props.cityInputChgHandler}
+                weatherThereBtnHandler={this.props.weatherThereBtnHandler}
+                myWeatherBtnHandler={this.props.myWeatherBtnHandler}/>
+            }
           </div>
         </div>
       </div>

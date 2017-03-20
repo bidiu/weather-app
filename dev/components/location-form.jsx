@@ -39,8 +39,6 @@ export const LocationForm = React.createClass({
             <div className="location-form-text" style={textStyle}>
               Check the weather in
             </div>
-            {/* <input name="cityName" type="text" style={inputStyle} value={cityName}
-              placeholder="city name goes here" onChange={this.props.cityInputChgHandler}/> */}
             <AutoCompleteWrapper onUpdateInput={this.props.cityInputChgHandler}
               inputValue={this.props.cityName}/>
             <Buttonify display="block" width="100%" height="36px" opacity="1"
