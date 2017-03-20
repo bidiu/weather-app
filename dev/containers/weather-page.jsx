@@ -45,9 +45,9 @@ export const WeatherPage = React.createClass({
     }
     return weatherDataList;
   },
-  cityInputChgHandler: function(e) {
+  cityInputChgHandler: function(inputValue) {
     this.setState({
-      cityInput: e.target.value
+      cityInput: inputValue
     });
   },
   // return increased progress

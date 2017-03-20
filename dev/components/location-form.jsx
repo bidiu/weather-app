@@ -1,5 +1,6 @@
 import React from "react";
 import { Buttonify } from "./common/button.jsx";
+import { AutoCompleteWrapper } from './autocomplete.jsx';
 
 export const LocationForm = React.createClass({
   render: function() {
@@ -47,8 +48,9 @@ export const LocationForm = React.createClass({
             <div className="location-form-text" style={textStyle}>
               Check the weather in
             </div>
-            <input name="cityName" type="text" style={inputStyle} value={cityName}
-              placeholder="city name goes here" onChange={this.props.cityInputChgHandler}/>
+            {/* <input name="cityName" type="text" style={inputStyle} value={cityName}
+              placeholder="city name goes here" onChange={this.props.cityInputChgHandler}/> */}
+            <AutoCompleteWrapper onUpdateInput={this.props.cityInputChgHandler}/>
             <Buttonify display="block" width="160px" height="32px" opacity="1"
               borderRadius="5px" backgroundColor="rgb(255, 141, 0)" type="submit"
               margin="10px 0" color="#333" fontWeight="bold" fontSize="14px"

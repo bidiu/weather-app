@@ -25,7 +25,7 @@ router.get('/:name', function(req, res, next) {
 // .. is super simple param validation
 // if not valid, correct it with some reasonable values
 
-const DEFAULT_RES_SIZE = 8;
+const DEFAULT_RES_SIZE = 6;
 const DEFAULT_OFFSET = 0;
 
 function getQueryParamSize(req) {
