@@ -47,11 +47,13 @@ export const MarkdownRender = React.createClass({
       error: () => {
         c_this.setState({
           isActivated: false,
-          renderedContent: '<div>Need Internet to render the Markdown text here</div>',
+          renderedContent: '<div>Need Internet to render the Markdown text here.</div>',
           retryBtn: (
-            <Buttonify clickHandler={this.retryBtnClickHandler}>
-              Retry
-            </Buttonify>
+            <div>
+              <Buttonify clickHandler={this.retryBtnClickHandler}>
+                Retry
+              </Buttonify>
+            </div>
           )
         });
       }
@@ -65,10 +67,13 @@ export const MarkdownRender = React.createClass({
     return (
       <div>
         <ProgressBarWrapper style={barStyle} isActivated={this.state.isActivated}/>
-        <div dangerouslySetInnerHTML={{ __html: this.state.renderedContent }}>
+        <div>
+          <div dangerouslySetInnerHTML={{ __html: this.state.renderedContent }}>
+          </div>
+          {this.state.retryBtn}
         </div>
         <div>
-          {this.state.retryBtn}
+          Markdown document is rendered by Github.
         </div>
       </div>
     );

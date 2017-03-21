@@ -73,7 +73,7 @@ export const MainTile = React.createClass({
       tileStyle.backgroundImage = "url(/images/gps.png)";
       tileStyle.backgroundSize = "28px 28px";
       tileStyle.backgroundRepeat = "no-repeat";
-      tileStyle.backgroundPosition = "88% 10%";
+      tileStyle.backgroundPosition = "70% 10%";
     }
     const row1Style = {
       overflow: "auto",
