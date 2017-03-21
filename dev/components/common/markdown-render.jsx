@@ -1,5 +1,4 @@
 import React from 'react';
-import md5 from 'js-md5';
 import { ProgressBarWrapper } from './pb-wrapper.jsx';
 import { Buttonify } from './button.jsx'
 
@@ -96,7 +95,8 @@ export const MarkdownRender = React.createClass({
       <div style={style}>
         <ProgressBarWrapper style={barStyle} isActivated={this.state.isActivated}/>
         <div style={contentStyle}>
-          <div dangerouslySetInnerHTML={{ __html: this.state.renderedContent }}>
+          <div dangerouslySetInnerHTML={{ __html: this.state.renderedContent }}
+            className='markdown-body'>
           </div>
           {this.state.retryBtn}
         </div>
