@@ -1,6 +1,6 @@
-## How to start the server locally.
+## How to start the server locally
 
-Application is developed with Node.js tech stack, so you need `node` and `npm` installed in order to build and run it locally.
+Application is developed with Node.js tech stack, so you need `node` and `npm` in order to build and run it locally.
 
 First, clone this repository
 ```
@@ -49,4 +49,4 @@ http://localhost:3000
 - Only been tested on Chrome, Firefox and Safari
 - Currently not responsive
 - This application uses HTML5 Geolocation API to provide weather data of user's current location
-- **Geolocation is banned in Safari for insecure connections, even with localhost.**
+- **Geolocation is banned in Safari in Sierra (macOS 10.12) for insecure connections, even with localhost.**
