@@ -1,6 +1,7 @@
 import React from 'react';
 import { AutoCompleteWrapper } from '../components/autocomplete.jsx';
 import { Showcase } from "./showcase.jsx";
+import { MarkdownRender } from '../components/common/markdown-render.jsx';
 
 export const AboutPage = React.createClass({
   render: function() {
@@ -10,6 +11,7 @@ export const AboutPage = React.createClass({
           offset="46px" padding="10px" width="780px" height="360px"
           backgroundImage="url(/images/showcase-about.jpg)"
           showMainArea={false} showForm={false} coverRatio="0.1"/>
+        <MarkdownRender mode="markdown" markdown={'**Hello, world.**'}/>
       </div>
     );
   }

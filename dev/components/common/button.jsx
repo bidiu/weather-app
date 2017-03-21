@@ -1,6 +1,9 @@
 import React from "react";
 import { transColor } from "../../utils/helpers.jsx";
 
+const DEFAULT_BG_COLOR = "#eee";
+const DEFAULT_COLOR = "#000"
+
 export const Buttonify = React.createClass({
   componentDidMount: function() {
     // __this is the component
@@ -14,10 +17,12 @@ export const Buttonify = React.createClass({
       $(this).css("filter", "drop-shadow(0 0 1px #222)");
     });
     $(this.__btn).mousedown(function(e) {
-      $(this).css("background-color", transColor(__this.props.backgroundColor, -0.4));
+      $(this).css("background-color",
+          transColor(__this.props.backgroundColor || DEFAULT_BG_COLOR, -0.4));
     });
     $(this.__btn).mouseup(function(e) {
-      $(this).css("background-color", __this.props.backgroundColor);
+      $(this).css("background-color",
+          __this.props.backgroundColor || DEFAULT_BG_COLOR);
     });
     $(this.__btn).click(function(e) {
       e.preventDefault();
@@ -28,8 +33,8 @@ export const Buttonify = React.createClass({
     const btnStyle = {
       WebkitFilter: "drop-shadow(0 0 1px #222)",
       filter: "drop-shadow(0 0 1px #222)",
-      width: this.props.width || auto,
-      height: this.props.height || auto,
+      width: this.props.width || "auto",
+      height: this.props.height || "auto",
       margin: this.props.margin || 0,
       padding: this.props.padding || 0,
       opacity: this.props.opacity || "1",
@@ -38,8 +43,8 @@ export const Buttonify = React.createClass({
       MozBorderRadius: this.props.borderRadius || 0,
       WebkitBorderRadius: this.props.borderRadius || 0,
       borderWidth: this.props.borderWidth || 0,
-      backgroundColor: this.props.backgroundColor || "#aaa",
-      color: this.props.color || "#000",
+      backgroundColor: this.props.backgroundColor || DEFAULT_BG_COLOR,
+      color: this.props.color || DEFAULT_COLOR,
       fontWeight: this.props.fontWeight || "normal",
       fontSize: this.props.fontSize || "inherit"
     };
