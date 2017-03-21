@@ -1,10 +1,13 @@
 var webpack = require("webpack");
 var path = require("path");
 var fs = require('fs');
+var jsStringEscape = require('js-string-escape');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var StringReplacePlugin = require('string-replace-webpack-plugin');
 
 var DEV = path.resolve(__dirname, "dev");
 var OUTPUT = path.resolve(__dirname, "public");
+var DOCS = path.resolve(__dirname, 'docs');
 
 // TODO make it a webpack plguin
 // based on https://gist.github.com/liangzan/807712, altered
@@ -34,6 +37,10 @@ cleanDir(OUTPUT, {
   dry: false
 });
 
+// prepare for replacing some strings later in the loader
+var aboutDoc = fs.readFileSync(DOCS + '/about.md', { encoding: 'utf8' });
+aboutDoc = jsStringEscape(aboutDoc);
+
 var config = {
   devtool: 'source-map',
 
@@ -56,13 +63,27 @@ var config = {
       compress: {
         warnings: false
       }
-    })
+    }),
+    new StringReplacePlugin()
   ],
 
   module: {
     loaders: [{
-        include: DEV,
-        loader: "babel-loader",
+      test: /about-page\.jsx$/,
+      loaders: [
+        StringReplacePlugin.replace({
+          replacements: [{
+            pattern: /#{ ABOUT_DOC_TO_BE_REPLACED }/g,
+            replacement: function() {
+              return aboutDoc;
+            }
+          }]
+        }),
+        'babel-loader'
+      ]
+    }, {
+      test: /\.jsx$/,
+      loader: 'babel-loader'
     }]
   }
 };

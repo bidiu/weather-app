@@ -3,6 +3,9 @@ import { AutoCompleteWrapper } from '../components/autocomplete.jsx';
 import { Showcase } from './showcase.jsx';
 import { MarkdownRender } from '../components/common/markdown-render.jsx';
 
+// to be replaced when building the project
+const aboutDoc = '#{ ABOUT_DOC_TO_BE_REPLACED }';
+
 export const AboutPage = React.createClass({
   render: function() {
     const containerStyle = {
@@ -17,7 +20,7 @@ export const AboutPage = React.createClass({
           backgroundImage='url(/images/showcase-about.jpg)'
           showMainArea={false} showForm={false} coverRatio='0.1'/>
         <div style={containerStyle}>
-          <MarkdownRender mode='markdown' markdown={'**Hello, world.**'}/>
+          <MarkdownRender mode='markdown' markdown={aboutDoc}/>
         </div>
       </div>
     );

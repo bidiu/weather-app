@@ -1,10 +1,13 @@
 var webpack = require("webpack");
 var path = require("path");
 var fs = require('fs');
+var jsStringEscape = require('js-string-escape');
 var CopyWebpackPlugin = require('copy-webpack-plugin');
+var StringReplacePlugin = require('string-replace-webpack-plugin');
 
 var DEV = path.resolve(__dirname, "dev");
 var OUTPUT = path.resolve(__dirname, "public");
+var DOCS = path.resolve(__dirname, 'docs');
 
 // TODO make it a webpack plguin
 // based on https://gist.github.com/liangzan/807712, altered
@@ -28,6 +31,7 @@ function cleanDir(dirPath, opt) {
   }
 }
 
+// prompt dev build info
 console.log("This is a development build, for production build, execute: ");
 console.log("\n\twebpack --config webpack.production.config.js\n");
 
@@ -36,6 +40,10 @@ cleanDir(OUTPUT, {
   ignore: ['.gitkeep'],
   dry: false
 });
+
+// prepare for replacing some strings later in the loader
+var aboutDoc = fs.readFileSync(DOCS + '/about.md', { encoding: 'utf8' });
+aboutDoc = jsStringEscape(aboutDoc);
 
 var config = {
   entry: {
@@ -53,11 +61,25 @@ var config = {
       { from: DEV + '/images', to: OUTPUT + '/images' },
       { from: DEV + '/css', to: OUTPUT + '/stylesheets' },
       { from: path.resolve(__dirname, 'index.html'), to: OUTPUT }
-    ])
+    ]),
+    new StringReplacePlugin()
   ],
 
   module: {
     loaders: [{
+      test: /about-page\.jsx$/,
+      loaders: [
+        StringReplacePlugin.replace({
+          replacements: [{
+            pattern: /#{ ABOUT_DOC_TO_BE_REPLACED }/g,
+            replacement: function() {
+              return aboutDoc;
+            }
+          }]
+        }),
+        'babel-loader'
+      ]
+    }, {
       test: /\.jsx$/,
       loader: 'babel-loader'
     }]

@@ -77,7 +77,8 @@ export const MarkdownRender = React.createClass({
       boxShadow: '0px 0px 4px #ababab'
     };
     const contentStyle = {
-      padding: '20px'
+      padding: '20px',
+      minHeight: '220px'
     };
     const footerStyle = {
       overflow: 'auto',
