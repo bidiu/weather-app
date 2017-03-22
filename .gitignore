@@ -65,7 +65,6 @@ typings/
 /public/**/*.png
 /public/**/*.jpg
 /public/**/*.ico
-/config.js
 .DS_Store
 *~
 *.swp
