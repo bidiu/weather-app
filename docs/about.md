@@ -1,5 +1,7 @@
 ## About
 
+> To change the text here, edit the file `./docs/about.md`, and then rebuild the project.
+
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ultrices eu ligula id malesuada. Duis et tincidunt neque. Cras quis purus sapien. Fusce cursus egestas semper. Mauris turpis neque, mollis sit amet ultricies quis, sagittis non velit. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Mauris scelerisque id dolor non porttitor. Nullam quam sem, eleifend sit amet metus eu, semper facilisis eros. Sed vel ultricies ante, non iaculis magna. Donec eu ultricies purus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed cursus condimentum odio. Cras porta, arcu id blandit vestibulum, elit lectus congue quam, quis efficitur enim odio vel orci. Pellentesque dictum scelerisque felis, ultrices varius lacus vestibulum in. Sed et tempus nisl. Nunc maximus justo enim, quis tempor lorem accumsan sit amet.
 
 Vestibulum ut metus ante. Cras ac leo ultrices, rutrum est eu, varius mi. Nullam neque libero, molestie in sapien sit amet, fringilla tristique erat. Duis ultrices ex ex, a lacinia leo semper eu. Aliquam malesuada rutrum urna, vitae tincidunt erat pharetra quis. Aliquam varius nunc sit amet tortor ultricies eleifend. Cras nec ligula nibh. Vivamus commodo ac tortor ut egestas. Pellentesque a suscipit orci. Donec ut nisl risus.
